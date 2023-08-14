@@ -111,8 +111,12 @@ def plot_traj(ax,stamps,traj,style,color,label):
     label -- plot legend
     
     """
-    stamps.sort()
+    #stamps.sort()
+    sorted(stamps)
     interval = numpy.median([s-t for s,t in zip(stamps[1:],stamps[:-1])])
+    # stamp_keys = list(stamps)
+    # sorted_keys = sorted(stamp_keys)
+    # interval = numpy.median([stamps[sorted_keys[i+1]] - stamps[sorted_keys[i]] for i in range(len(sorted_keys)-1)])
     x = []
     y = []
     last = stamps[0]
@@ -165,33 +169,35 @@ if __name__=="__main__":
     second_xyz_notscaled = rot * second_xyz + trans
     second_xyz_notscaled_full = rot * second_xyz_full + trans
     first_stamps = first_list.keys()
-    first_stamps.sort()
+    #first_stamps = set(first_list)
+    #first_stamps.sort()
+    first_stamps = sorted(first_stamps)
     first_xyz_full = numpy.matrix([[float(value) for value in first_list[b][0:3]] for b in first_stamps]).transpose()
     
     second_stamps = second_list.keys()
-    second_stamps.sort()
+    #second_stamps.sort()
+    second_stamps = sorted(second_stamps)
     second_xyz_full = numpy.matrix([[float(value)*float(args.scale) for value in second_list[b][0:3]] for b in second_stamps]).transpose()
     second_xyz_full_aligned = scale * rot * second_xyz_full + trans
     
     if args.verbose:
-        print "compared_pose_pairs %d pairs"%(len(trans_error))
-
-        print "absolute_translational_error.rmse %f m"%numpy.sqrt(numpy.dot(trans_error,trans_error) / len(trans_error))
-        print "absolute_translational_error.mean %f m"%numpy.mean(trans_error)
-        print "absolute_translational_error.median %f m"%numpy.median(trans_error)
-        print "absolute_translational_error.std %f m"%numpy.std(trans_error)
-        print "absolute_translational_error.min %f m"%numpy.min(trans_error)
-        print "absolute_translational_error.max %f m"%numpy.max(trans_error)
-        print "max idx: %i" %numpy.argmax(trans_error)
+        print("compared_pose_pairs %d pairs"%(len(trans_error)))
+        print("absolute_translational_error.rmse %f m"%numpy.sqrt(numpy.dot(trans_error,trans_error) / len(trans_error)))
+        print("absolute_translational_error.mean %f m"%numpy.mean(trans_error))
+        print("absolute_translational_error.median %f m"%numpy.median(trans_error))
+        print("absolute_translational_error.std %f m"%numpy.std(trans_error))
+        print("absolute_translational_error.min %f m"%numpy.min(trans_error))
+        print("absolute_translational_error.max %f m"%numpy.max(trans_error))
+        print("max idx: %i" %numpy.argmax(trans_error))
     else:
         # print "%f, %f " % (numpy.sqrt(numpy.dot(trans_error,trans_error) / len(trans_error)),  scale)
         # print "%f,%f" % (numpy.sqrt(numpy.dot(trans_error,trans_error) / len(trans_error)),  scale)
-        print "%f,%f,%f" % (numpy.sqrt(numpy.dot(trans_error,trans_error) / len(trans_error)), scale, numpy.sqrt(numpy.dot(trans_errorGT,trans_errorGT) / len(trans_errorGT)))
+        print("%f,%f,%f" % (numpy.sqrt(numpy.dot(trans_error,trans_error) / len(trans_error)), scale, numpy.sqrt(numpy.dot(trans_errorGT,trans_errorGT) / len(trans_errorGT))))
         # print "%f" % len(trans_error)
     if args.verbose2:
-        print "compared_pose_pairs %d pairs"%(len(trans_error))
-        print "absolute_translational_error.rmse %f m"%numpy.sqrt(numpy.dot(trans_error,trans_error) / len(trans_error))
-        print "absolute_translational_errorGT.rmse %f m"%numpy.sqrt(numpy.dot(trans_errorGT,trans_errorGT) / len(trans_errorGT))
+        print("compared_pose_pairs %d pairs"%(len(trans_error)))
+        print("absolute_translational_error.rmse %f m"%numpy.sqrt(numpy.dot(trans_error,trans_error) / len(trans_error)))
+        print("absolute_translational_errorGT.rmse %f m"%numpy.sqrt(numpy.dot(trans_errorGT,trans_errorGT) / len(trans_errorGT)))
 
     if args.save_associations:
         file = open(args.save_associations,"w")
@@ -205,7 +211,7 @@ if __name__=="__main__":
 
     if args.plot:
         import matplotlib
-        matplotlib.use('Agg')
+        #matplotlib.use('Agg')
         import matplotlib.pyplot as plt
         import matplotlib.pylab as pylab
         from matplotlib.patches import Ellipse
@@ -213,17 +219,18 @@ if __name__=="__main__":
         ax = fig.add_subplot(111)
         plot_traj(ax,first_stamps,first_xyz_full.transpose().A,'-',"black","ground truth")
         plot_traj(ax,second_stamps,second_xyz_full_aligned.transpose().A,'-',"blue","estimated")
-        label="difference"
-        for (a,b),(x1,y1,z1),(x2,y2,z2) in zip(matches,first_xyz.transpose().A,second_xyz_aligned.transpose().A):
-            ax.plot([x1,x2],[y1,y2],'-',color="red",label=label)
-            label=""
+        # label="difference"
+        # for (a,b),(x1,y1,z1),(x2,y2,z2) in zip(matches,first_xyz.transpose().A,second_xyz_aligned.transpose().A):
+        #     ax.plot([x1,x2],[y1,y2],'-',color="red",label=label)
+        #     label=""
             
         ax.legend()
             
         ax.set_xlabel('x [m]')
         ax.set_ylabel('y [m]')
         plt.axis('equal')
-        plt.savefig(args.plot,format="pdf")
+        plt.savefig(args.plot,format="png")
+        plt.show()
 
 
         

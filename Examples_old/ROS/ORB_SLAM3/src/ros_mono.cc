@@ -61,13 +61,16 @@ int main(int argc, char **argv)
     ros::NodeHandle nodeHandler;
     ros::Subscriber sub = nodeHandler.subscribe("/camera/image_raw", 1, &ImageGrabber::GrabImage,&igb);
 
+    
     ros::spin();
 
     // Stop all threads
     SLAM.Shutdown();
 
     // Save camera trajectory
-    SLAM.SaveKeyFrameTrajectoryTUM("KeyFrameTrajectory.txt");
+    //SLAM.SaveKeyFrameTrajectoryTUM("KeyFrameTrajectory.txt");
+    SLAM.SaveTrajectoryEuRoC("/workspace/ORB_SLAM3_master/evaluation/Ground_truth/EuRoC_orb/mono_Trajectory.txt");
+    SLAM.SaveKeyFrameTrajectoryEuRoC("/workspace/ORB_SLAM3_master/evaluation/Ground_truth/EuRoC_orb/mono_KeyFrameTrajectory.txt");
 
     ros::shutdown();
 
